@@ -113,7 +113,6 @@ public class MainActivity extends AppCompatActivity {
 
             for (int i = 0; i < posts.length(); i++) {
                 JSONObject post = posts.optJSONObject(i);
-//                JSONObject post = posts.getJSONObject(i);
                 FeedItem item = new FeedItem();
                 item.setTitle(post.optString("title"));
                 item.setDescription(post.optString("cta"));
