@@ -34,7 +34,8 @@ public class MainActivity extends AppCompatActivity {
     private RecyclerView mRecyclerView;
     private RecyclerViewAdapter adapter;
 
-    String hostUrl = "https://raw.githubusercontent.com/jayantb95/android-JSONParser/master/SampleData/SampleData.json";
+    //    String hostUrl = "https://raw.githubusercontent.com/jayantb95/android-JSONParser/master/SampleData/SampleData.json";
+    String hostUrl = "https://raw.githubusercontent.com/jayantb95/android-JSONParser/master/SampleData/SampleData2.json";
 
 
     @Override
