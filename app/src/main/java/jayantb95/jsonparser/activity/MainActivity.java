@@ -1,6 +1,7 @@
 
 package jayantb95.jsonparser.activity;
 
+import android.app.ProgressDialog;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -8,8 +9,6 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
-import android.view.View;
-import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import org.json.JSONArray;
@@ -23,9 +22,9 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
-import jayantb95.jsonparser.dataModel.FeedItem;
 import jayantb95.jsonparser.R;
 import jayantb95.jsonparser.adapter.RecyclerViewAdapter;
+import jayantb95.jsonparser.dataModel.FeedItem;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -34,8 +33,9 @@ public class MainActivity extends AppCompatActivity {
     private List<FeedItem> feedsList;
     private RecyclerView mRecyclerView;
     private RecyclerViewAdapter adapter;
-    private ProgressBar progressBar;
-    String url = "http://asetalias.in/data/events.json";
+
+    String hostUrl = "https://raw.githubusercontent.com/jayantb95/android-JSONParser/master/SampleData/SampleData.json";
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,7 +43,6 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         mRecyclerView = (RecyclerView) findViewById(R.id.recycler_view);
-        progressBar = (ProgressBar) findViewById(R.id.progress_bar);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(MainActivity.this));
 
 
@@ -52,15 +51,19 @@ public class MainActivity extends AppCompatActivity {
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
 
 
-        new DownloadTask().execute(url);
+        new DownloadTask().execute(hostUrl);
 
     }
 
     public class DownloadTask extends AsyncTask<String, Void, Integer> {
 
+        private ProgressDialog progressDialog = new ProgressDialog(MainActivity.this);
+
         @Override
         protected void onPreExecute() {
-            progressBar.setVisibility(View.VISIBLE);
+            progressDialog.setMessage("\tLoading...");
+            progressDialog.setCancelable(false);
+            progressDialog.show();
         }
 
         @Override
@@ -93,7 +96,7 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(Integer result) {
-            progressBar.setVisibility(View.GONE);
+            progressDialog.dismiss();
 
             if (result == 1) {
                 adapter = new RecyclerViewAdapter(MainActivity.this, feedsList);
@@ -115,7 +118,7 @@ public class MainActivity extends AppCompatActivity {
                 JSONObject post = posts.optJSONObject(i);
                 FeedItem item = new FeedItem();
                 item.setTitle(post.optString("title"));
-                item.setDescription(post.optString("cta"));
+                item.setDescription(post.optString("description"));
                 feedsList.add(item);
             }
         } catch (JSONException e) {
